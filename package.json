@@ -2,7 +2,7 @@
   "name": "brackets-menus.manager",
   "title": "Menus Manager...",
   "description": "remove menus and keys by select option. restart brackets to apply changes in uncheck",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "homepage": "https://github.com/DH3ALEJANDRO/brackets-menus.manager",
   "author": "Avril Alejandro",
   "repository": {
