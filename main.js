@@ -11,146 +11,164 @@ define(function (require, exports, module) {
     KeyBindingManager = brackets.getModule("command/KeyBindingManager"),
     Commands = brackets.getModule("command/Commands"),
     PreferencesManager = brackets.getModule('preferences/PreferencesManager'),
-    COMMAND_ID = "cw.disable.menus",
+    preferences = PreferencesManager.getExtensionPrefs("disable.Menus"),
+    COMMAND_ID = "disable.menus",
     commandName = 'Disable Menus',
-    viewmenu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU),
-    settingsDialogTemplate = require('text!./menus.html');
+    viewmenu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
 
   brackets.getModule("utils/ExtensionUtils").loadStyleSheet(module, "./style.css");
-
-
-  function getMenuItem(menu, item) {
-    return Menus.getMenuItem(menu + "-" + item);
-  }
-  function getContextMenuItem(menu, item) {
-    return Menus.getMenuItem(menu + "-" + item);
-  }
-  function li(str){
-    var tstr = Strings[str.toUpperCase().replace(/-/gi, "_")];
-    var lia = $(document.createElement("a"))
-        .data("toggle", "tab")
-        .attr("href", "#"+str)
-        .click(function(){
-          alert("change pane!");
-        })
-        .text(tstr || str);
-    return $(document.createElement("li"))
-           .html(lia);
-  }
-  function table(str){
-    var la = $(document.createElement("div"))
-            .attr("id", str)
-            .addClass("tab-pane fade");
-    return la.html($(document.createElement("table")).css("width", "100%"));
-  }
-  function item(str){
-    var key = KeyBindingManager.getKeyBindings(str),
-        tdm = $(document.createElement("td"))
-             .append('&emsp;&emsp;<input type="checkbox" checked>&ensp;<span>'+str.getName()+'</span>'),
-        tdk = $(document.createElement("td"))
-             .append((key.length>0)?'&emsp;&emsp;<input type="checkbox" checked>&ensp;<span>'+key[0].key+'</span>':"")
-             .addClass((key.length>0)?"disable-keybinding":""),
-        tr = $(document.createElement("tr"))
-             .append(tdm)
-             .append(tdk);
-    return tr;
-  }
-  function showed() {
-    var compiledTemplate = Mustache.render(settingsDialogTemplate, Strings),
-      dialog = Dialogs.showModalDialogUsingTemplate(compiledTemplate, true),
-      allMenus = Menus.getAllMenus(),
-      allCommands = CommandManager.getAll(),
-      ify;
-    //console.log(KeyBindingManager.getKeymap());
-    for (ify in allMenus) {
-      if (allMenus.hasOwnProperty(ify)) {
-        //console.log(allCommands.sort());
-        //console.log("%c" + Menus.getMenu(ify).id, "background : green;");
-        dialog.getElement().find(".nav-tabs").append(li(Menus.getMenu(ify).id));
-        var ifc;
-        //icf;
-        dialog.getElement().find(".tab-content").append(table(Menus.getMenu(ify).id));
-        for (ifc = 0; ifc < allCommands.length; ifc += 1) {
-          var items = CommandManager.get(allCommands[ifc]);
-          if (null !== items.getName()) {
-            if ("undefined" !== typeof getMenuItem(ify, items.getID())) {
-              //console.log(getMenuItem(ify, items.getID()).getCommand().getName());
-              dialog.getElement().find(".tab-content #"+ify+" table").append(item(getMenuItem(ify, items.getID()).getCommand()));
-              //<div id="home" class="tab-pane fade in active">
-              //<div id="menu1" class="tab-pane fade">
-            }
-            //if("undefined" !== typeof getContextMenuItem(ify, items.getID())){
-            //  console.log(getContextMenuItem(ify, items.getID()).getCommand().getName());
-            //}
-          }
-        }
-        //for(icf = 0; icf < allCommands.length; icf += 1){
-
-        //}
-      }
-    }
-    dialog.getElement().find(".nav-tabs li").first().addClass("active");
-    dialog.getElement().find(".tab-content .tab-pane").first().addClass("in active");
-    //prefsStore(dialog.getElement());
-    dialog.done(function (i) {
-      if ("cancel" === i || "dontsave" === i) {
-        return;
-      } else if ("ok" === i) {
-        //setPref(dialog.getElement());
-        return;
-      }
-    });
-  }
 
   function addCommandMenu(name, id, fn, pos, rel) {
     CommandManager.register(name, id, fn);
     viewmenu.addMenuItem(id, "", pos, rel);
   }
-  addCommandMenu(commandName, COMMAND_ID, showed, Menus.BEFORE, Commands.CMD_SPLITVIEW_NONE);
-  /*AppInit.appReady(function(){
-    //console.log(Menus.AppMenuBar);
-    //console.log(Menus.ContextMenuIds);
-    //console.log(Menus.getContextMenu("editor-context-menu"));
-    //console.log(Menus.getMenuItem("editor-context-menu" + "-" + "get_dimensions"));
-    //console.log(Menus.getMenuItem("editor-context-menu" + "-" + "get_dimensions").getCommand().getName());
-    // > console.log(Menus.getMenuItem(Menus.AppMenuBar.VIEW_MENU + "-" + Commands.TOGGLE_LINE_NUMBERS));
-    //console.log(getMenuItem("file-menu", "insya.newhtml5"));
-    //console.log(CommandManager.get("insya.newhtml5"));
-    window.setTimeout(function(){
-      var allMenus = Menus.getAllMenus(),
-          allCommands = CommandManager.getAll(),
-          ify;
-      for(ify in allMenus){
-        if(allMenus.hasOwnProperty(ify)){
-          //console.log(allCommands.sort());
-        console.log("%c" + Menus.getMenu(ify).id, "background : green;");
-          //<li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-          var ifc;
-              //icf;
-          for(ifc = 0; ifc < allCommands.length; ifc += 1){
+
+  function getMenuItem(menu, item) {
+    return Menus.getMenuItem(menu + "-" + item);
+  }
+
+  function li(str) {
+    var tstr = Strings[str.toUpperCase().replace(/-/gi, "_")],
+      strhtml = (tstr || str);
+    return '<li><a class="btn" data-toggle="pill" href="#' + str + '">' + strhtml + '</a></li>';
+  }
+
+  function table(str) {
+    return '<div id="' + str + '" class="tab-pane fade"><table width="100%">';
+  }
+
+  function item(str, menu) {
+    var key = KeyBindingManager.getKeyBindings(str),
+      tdm = '<td data-menu="'+menu+'" data-commandid="' + str.getID() + '" class="disable-menu">&emsp;&emsp;<input type="checkbox">&ensp;<span>' + str.getName() + '</span></td>',
+      tdk = '<td data-relativemenu="' + menu+'-'+str.getID() + '" ' + ((key.length > 0) ? 'data-disablekey="' + key[0].key + '"' : '') + ' class="' + ((key.length > 0) ? "disable-keybinding" : "") + '">' + ((key.length > 0) ? '&emsp;&emsp;<input type="checkbox">&ensp;<span>' + key[0].key + '</span>' : "") + '</td>';
+    return "<tr>" + tdm + tdk + "</tr>";
+  }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  function storedisabledata(elems, objects) {
+    var pga = preferences.get("all"),
+      sti;
+    if (pga) {
+      for (sti = 0; sti < elems.length; sti += 1) {
+        //console.log(elems[sti]);
+        console.log(pga[sti]);
+        /*if ("disable-menu" === elems[sti].getAttribute("class")) {
+          elems[sti].getElementsByTagName("input")[0].checked = pga[elems[sti].getAttribute("data-commandid")];
+        }
+        if ("disable-keybinding" === elems[sti].getAttribute("class")) {
+          elems[sti].getElementsByTagName("input")[0].checked = pga[elems[sti].getAttribute("data-disablekey")];
+        }*/
+      }
+    }
+    //console.dir(objects);
+  }
+
+  function showed() {
+    var settingsDialogTemplate = require('text!./menus.html'),
+      compiledTemplate = Mustache.render(settingsDialogTemplate, Strings),
+      dialog = Dialogs.showModalDialogUsingTemplate(compiledTemplate, true);
+    var allgets = {},
+      allMenus = Menus.getAllMenus(),
+      allCommands = CommandManager.getAll(),
+      ify,
+      cif,
+      contentul = "",
+      contenttable = "";
+    for (ify in allMenus) {
+      if (allMenus.hasOwnProperty(ify)) {
+        contentul += li(Menus.getMenu(ify).id);
+        var ifc;
+        contenttable += table(Menus.getMenu(ify).id);
+        for (ifc = 0; ifc < allCommands.length; ifc += 1) {
           var items = CommandManager.get(allCommands[ifc]);
-            if(null !== items.getName()){
-              if("undefined" !== typeof getMenuItem(ify, items.getID())){
-                console.log(getMenuItem(ify, items.getID()).getCommand().getName());
-              }
-              //if("undefined" !== typeof getContextMenuItem(ify, items.getID())){
-              //  console.log(getContextMenuItem(ify, items.getID()).getCommand().getName());
-              //}
+          if (null !== items.getName()) {
+            if ("undefined" !== typeof getMenuItem(ify, items.getID())) {
+              contenttable += item(getMenuItem(ify, items.getID()).getCommand(), ify);
             }
           }
-          //for(icf = 0; icf < allCommands.length; icf += 1){
-            
-          //}
+        }
+        contenttable += '</table></div>';
+      }
+    }
+    var context = $("#context-menu-bar ul .dropdown.context-menu"),
+      editorcontextual = "",
+      editortable = "";
+    for (cif = 0; cif < context.length; cif += 1) {
+      editorcontextual += '<li><a class="btn" data-toggle="pill" href="#' + context[cif].id.replace(/-/gi, "") + '">' + capitalizeFirstLetter(context[cif].id).replace(/context |menu |context|menu/gi, "").replace(/-/gi, " ") + '</a></li>';
+      var icm,
+        iitem = context[cif].getElementsByTagName("li");
+      editortable += table(context[cif].id.replace(/-/gi, ""));
+      for (icm = 0; icm < iitem.length; icm += 1) {
+        if (iitem[icm].getElementsByTagName("a").length > 0) {
+          editortable += item(Menus.getMenuItem(iitem[icm].getElementsByTagName("a")[0].id).getCommand(), context[cif].id);
         }
       }
-      //console.log(Menus.getMenu("insya-tools").removeMenuItem("string_remove_empty_lines"));
-      //console.log(Menus.getMenu("insya-tools")._getMenuItemForCommand(CommandManager.get("string_remove_empty_lines")));
-      //!console.log(Menus.getMenu("insya-tools")._getMenuItemId("string_remove_empty_lines"));
-      //console.dir(Menus.getMenu("insya-tools")._getRelativeMenuItem("string_trim", Menus.BEFORE));
-      //console.dir(Menus.getMenu("insya-tools")._getRelativeMenuItem("string_trim", Menus.FIRST));
-      //console.dir(Menus.getMenu("insya-tools")._getRelativeMenuItem("string_trim", Menus.FIRST_IN_SECTION));
-    }, 1500);
-    // > console.log(CommandManager.get(Commands.TOGGLE_LINE_NUMBERS));
-    //console.log(brackets.test.PreferencesManager.getAllPreferences());
-  });*/
+      editortable += '</table></div>';
+    }
+    var editortabs = '<div id="contextual" class="tab-pane fade"><ul class="nav nav-pills nav-justified">' + editorcontextual + '</ul><div class="tab-content">' + editortable + '</div></div>';
+    var contextual = '<li style="float:right;"><a class="btn" data-toggle="pill" href="#contextual">Contextual</a></li>';
+    dialog.getElement().find(".modal-header").html('<ul class="nav nav-pills nav-justified">' + contentul + contextual + '</ul>');
+    dialog.getElement().find(".modal-body").html('<div class="tab-content">' + contenttable + editortabs + '</div>');
+    window.setTimeout(function () {
+      dialog.getElement().find(".nav-pills li").first().addClass("active");
+      dialog.getElement().find(".tab-content .tab-pane").first().addClass("in active");
+
+      dialog.getElement().find("#contextual .nav-pills li").last().addClass("active");
+      dialog.getElement().find("#contextual .tab-content .tab-pane").last().addClass("in active");
+
+      storedisabledata(dialog.getElement().find(".modal-body table tr td"));
+    }, 2);
+    //prefsStore(dialog.getElement());
+    dialog.done(function (i) {
+      //console.log(i);
+      if ("cancel" === i || "dontsave" === i) {
+        return;
+      } else if ("ok" === i) {
+        //CommandManager.get(str.getID())
+        var tdinput = dialog.getElement().find(".modal-body table tr td"),
+          tdi;
+        for (tdi = 0; tdi < tdinput.length; tdi += 1) {
+          if ("disable-menu" === tdinput[tdi].getAttribute("class")) {
+            allgets[tdinput[tdi].getAttribute("data-commandid")] = tdinput[tdi].getElementsByTagName("input")[0].checked;
+          }
+          if ("disable-keybinding" === tdinput[tdi].getAttribute("class")) {
+            //console.log(tdinput[tdi].getAttribute("data-relativecommandid"), , );
+            allgets[tdinput[tdi].getAttribute("data-disablekey")] = tdinput[tdi].getElementsByTagName("input")[0].checked;
+          }
+        }
+        //console.log(dialog.getElement().find("td").data("commandid"));
+        //console.log(dialog.getElement().find("td").data("commandkey"));
+        preferences.set("all", allgets);
+        preferences.save();
+      }
+    });
+  }
+  addCommandMenu(commandName, COMMAND_ID, showed, Menus.BEFORE, Commands.CMD_SPLITVIEW_NONE);
+  AppInit.extensionsLoaded(function(){
+    var pga = preferences.get("all"),
+        rci;
+    if(pga){
+      for(rci in pga){
+        if(pga.hasOwnProperty(rci)){
+          //console.log(KeyBindingManager._getDisplayKey(rci));
+          /*if(KeyBindingManager.getKeyBindings(rci).length>0){
+            if(pga[KeyBindingManager.getKeyBindings(rci)[0].key]){
+              KeyBindingManager.removeBinding(KeyBindingManager.getKeyBindings(rci)[0].key);
+            }
+          }
+          if(CommandManager.get(rci)){
+            if(pga[CommandManager.get(rci).getID()]){
+              //console.log(CommandManager.get(rci).getID());
+              //console.log(Menus);
+              //Menus.removeMenuItem(CommandManager.get(rci));
+            }
+          }*/
+        }
+      }
+      //console.log(getMenuItem("file-menu", "file.openFolder"));
+    }
+  });
 });
