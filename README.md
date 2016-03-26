@@ -1,2 +1,22 @@
-# brackets-menus.manager
+# Menus Manager
 remove menus and keys by select option
+
+## Change History
+
+- 20/03/2016
+ * initial code
+- 21/03/2016
+ * rewrite (alpha version)
+- 22/03/2016
+ * rewrite (beta version)
+- 23/03/2016
+ * stable version
+- 25/03/2016
+ * fix multiple bugs
+
+## For support & issues
+
+Please post your issues, feature changes/requests of this extension using [github](https://github.com/DH3ALEJANDRO/brackets-menus.manager/issues). I will try to improve this extension.
+
+### Contribution
+ - Fork & Pull Request
