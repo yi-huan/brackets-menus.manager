@@ -1,5 +1,5 @@
 # Menus Manager
-remove menus and keys by select option
+remove menus and keys by select option. find menu option in `Menu/View > Menus Manager...`
 
 ## Change History
 
