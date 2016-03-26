@@ -1,0 +1,96 @@
+.modal-backdrop {
+  display: none!important;
+}
+
+.menus-manager {
+  width: 750px;
+}
+
+.menus-manager .modal-header,
+.menus-manager .nav {
+  /*padding: 4px 0;*/
+  margin: 0;
+}
+
+.menus-manager .addedmanager > a {
+  /*background-color: #dff0d8;*/
+  background-color: #3c763d;
+}
+.menus-manager tr.addedmanager{
+  background-color: #333639;
+  /*background-color: #dff0d8;*/
+}
+.menus-manager .tab-pane {
+  overflow: auto;
+}
+
+.menus-manager .modal-body {
+  padding: 0;
+}
+
+.menus-manager .nav-tabs {
+  border-bottom: 1px solid transparent;
+}
+
+.nav-pills>li>a {
+  border-radius: 3px;
+  margin: 0;
+  padding: 6px 12px;
+}
+
+.nav-pills>.active>a,
+.nav-pills>.active>a:hover,
+.nav-pills>.active>a:focus {
+  background-color: #016dc4;
+}
+
+.menus-manager .context-menusmanager{
+  float: right;
+}
+/*.menus-manager .nav-tabs>.active>a,
+.menus-manager .nav-tabs>.active>a:hover,
+.menus-manager .nav-tabs>.active>a:focus {
+  color: white;
+  background-color: #000;
+  border: 1px solid #000;
+  border-bottom-color: transparent;
+  cursor: default;
+}
+.menus-manager .nav-tabs>li>a {
+  border: 1px solid transparent;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  color: silver;
+}
+.menus-manager .nav>li>a:hover,
+.menus-manager .nav>li>a:focus {
+  background-color: #222;
+}
+.menus-manager a:focus {
+  color: silver;
+  box-shadow: 0 0 0 0 transparent;
+}*/
+
+.menus-manager table {
+  overflow: hidden;
+}
+
+.menus-manager tr:first-child td {
+  border-top: 0 solid transparent;
+}
+
+.menus-manager tr:last-child td {
+  border-bottom: 0 solid transparent;
+}
+
+.menus-manager td {
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: #222;
+  padding: 3px 0;
+}
+
+.menus-manager tr td + .menusmanager-key {
+  border-left-width: 1px;
+}
