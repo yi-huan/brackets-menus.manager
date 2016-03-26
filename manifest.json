@@ -1,0 +1,25 @@
+{
+  "name": "brackets-menus.manager",
+  "title": "Menus Manager...",
+  "description": "remove menus and keys by select option. restart brackets to apply changes in uncheck",
+  "version": "1.0.4",
+  "homepage": "https://github.com/DH3ALEJANDRO/brackets-menus.manager",
+  "author": "Avril Alejandro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DH3ALEJANDRO/brackets-menus.manager.git"
+  },
+  "categories": ["general", "custom", "menus", "menu", "keys", "shortcut"],
+  "keywords": ["menus", "menu", "keys", "key", "shortcut", "disable", "enable", "select", "option", "manager", "avril"],
+  "engines": {
+    "brackets": ">=0.44.0"
+  },
+  "files": ["package.json", "main.js", "style.css", "menus.html"],
+  "i18n": ["en", "es"],
+  "package-i18n": {
+    "es": {
+      "description": "seleccione los menus y atajos de taclado que desea remover. reinicie brackets para aplicar los cambios cuando desmarque las opciones",
+      "title": "Administrador de Menus"
+    }
+  }
+}
