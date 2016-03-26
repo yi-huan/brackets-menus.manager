@@ -468,4 +468,8 @@ define(function (require, exports, module) {
       trainsManagerMenus(preferences.get("menus"));
     }, 75);
   });
+  if(!window.localStorage.getItem("menusmanagerfirstrun")){
+    trainShow();
+    window.localStorage.setItem("menusmanagerfirstrun",!0);
+  }
 });
