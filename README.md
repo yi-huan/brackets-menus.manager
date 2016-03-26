@@ -25,4 +25,4 @@ Please post your issues, feature changes/requests of this extension using [githu
 
 #### optional preference
 
-> change the preference (brackets.json) `menusManager.store.sync` to true for delete Menus and Keys nonexistent
+> change the preference (brackets.json) `menusManager.store.sync` to true for delete Menus and Keys nonexistent (more RAM use)
