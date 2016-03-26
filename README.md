@@ -20,3 +20,9 @@ Please post your issues, feature changes/requests of this extension using [githu
 
 ### Contribution
  - Fork & Pull Request
+
+#### [Link direct to download [.zip]](https://s3.amazonaws.com/extend.brackets/brackets-menus.manager/brackets-menus.manager-1.0.4.zip)
+
+#### optional preference
+
+> change the preference (brackets.json) `menusManager.store.sync` to true for delete Menus and Keys nonexistent
